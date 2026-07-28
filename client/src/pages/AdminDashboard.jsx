@@ -34,6 +34,7 @@ const AdminDashboard = () => {
     nether_pot: 'Unranked',
     crystals: 'Unranked',
     netherite_smp: 'Unranked',
+    cart: 'Unranked',
     notes: '',
     updated_by: 'Admin',
   });
@@ -159,6 +160,7 @@ const AdminDashboard = () => {
       nether_pot: player.nether_pot || 'Unranked',
       crystals: player.crystals || 'Unranked',
       netherite_smp: player.netherite_smp || 'Unranked',
+      cart: player.cart || 'Unranked',
       notes: player.notes || '',
       updated_by: 'Admin',
     });
@@ -180,6 +182,7 @@ const AdminDashboard = () => {
       nether_pot: 'Unranked',
       crystals: 'Unranked',
       netherite_smp: 'Unranked',
+      cart: 'Unranked',
       notes: '',
       updated_by: 'Admin',
     });

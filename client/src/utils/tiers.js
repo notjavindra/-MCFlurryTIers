@@ -16,23 +16,23 @@ export const TIER_COLORS = {
 };
 
 export const TIER_POINTS = {
-  'HT5': 10,
-  'HT4': 20,
-  'HT3': 30,
-  'HT2': 40,
-  'HT1': 50,
-  'LT5': 60,
-  'LT4': 70,
-  'LT3': 80,
-  'LT2': 90,
-  'LT1': 100,
+  'LT5': 10,
+  'HT5': 20,
+  'LT4': 30,
+  'HT4': 40,
+  'LT3': 50,
+  'HT3': 60,
+  'LT2': 70,
+  'HT2': 80,
+  'LT1': 90,
+  'HT1': 100,
   'Low Tier': 45,
   'Mid Tier': 35,
   'High Tier': 25,
   'Unranked': 0,
 };
 
-export const TIER_ORDER = ['LT1', 'LT2', 'LT3', 'LT4', 'LT5', 'HT1', 'HT2', 'HT3', 'HT4', 'HT5', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
+export const TIER_ORDER = ['LT5', 'HT5', 'LT4', 'HT4', 'LT3', 'HT3', 'LT2', 'HT2', 'LT1', 'HT1', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
 
 export const GAMEMODES = [
   { key: 'sword', name: 'Sword', emoji: '⚔️' },
@@ -45,9 +45,10 @@ export const GAMEMODES = [
   { key: 'nether_pot', name: 'Nether Pot', emoji: '🧪' },
   { key: 'crystals', name: 'Crystals', emoji: '💥' },
   { key: 'netherite_smp', name: 'Netherite SMP', emoji: '🛡️' },
+  { key: 'cart', name: 'Cart', emoji: '🛒' },
 ];
 
-export const ALL_TIERS = ['LT1', 'LT2', 'LT3', 'LT4', 'LT5', 'HT1', 'HT2', 'HT3', 'HT4', 'HT5', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
+export const ALL_TIERS = ['LT5', 'HT5', 'LT4', 'HT4', 'LT3', 'HT3', 'LT2', 'HT2', 'LT1', 'HT1', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
 
 export const calculateOverallPoints = (player) => {
   let totalPoints = 0;
@@ -63,15 +64,15 @@ export const calculateOverallPoints = (player) => {
 };
 
 export const getOverallTierFromPoints = (averagePoints) => {
-  if (averagePoints >= 95) return 'LT1';
-  if (averagePoints >= 85) return 'LT2';
-  if (averagePoints >= 75) return 'LT3';
-  if (averagePoints >= 65) return 'LT4';
-  if (averagePoints >= 55) return 'LT5';
-  if (averagePoints >= 45) return 'HT1';
-  if (averagePoints >= 35) return 'HT2';
-  if (averagePoints >= 25) return 'HT3';
-  if (averagePoints >= 15) return 'HT4';
-  if (averagePoints >= 5) return 'HT5';
+  if (averagePoints >= 95) return 'HT1';
+  if (averagePoints >= 85) return 'LT1';
+  if (averagePoints >= 75) return 'HT2';
+  if (averagePoints >= 65) return 'LT2';
+  if (averagePoints >= 55) return 'HT3';
+  if (averagePoints >= 45) return 'LT3';
+  if (averagePoints >= 35) return 'HT4';
+  if (averagePoints >= 25) return 'LT4';
+  if (averagePoints >= 15) return 'HT5';
+  if (averagePoints >= 5) return 'LT5';
   return 'Unranked';
 };

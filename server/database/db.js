@@ -53,6 +53,13 @@ function initDb() {
       }
     });
 
+    // Add cart column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE players ADD COLUMN cart TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column name')) {
+        console.log('Cart column already exists or error:', err.message);
+      }
+    });
+
     // Create indexes for better search performance
     db.run('CREATE INDEX IF NOT EXISTS idx_username ON players(username)');
     db.run('CREATE INDEX IF NOT EXISTS idx_overall_tier ON players(overall_tier)');

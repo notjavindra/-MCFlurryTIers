@@ -43,16 +43,16 @@ router.get('/stats', authenticateToken, (req, res) => {
 
 // Add player
 router.post('/players', authenticateToken, (req, res) => {
-  const { username, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, notes, updated_by } = req.body;
+  const { username, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, cart, notes, updated_by } = req.body;
   
   const skin_url = `https://mc-heads.net/body/${username}/256`;
   
   const query = `
-    INSERT INTO players (username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, notes, updated_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO players (username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, cart, notes, updated_by)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   
-  db.run(query, [username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, notes, updated_by], function(err) {
+  db.run(query, [username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, cart, notes, updated_by], function(err) {
     if (err) {
       if (err.message.includes('UNIQUE constraint')) {
         res.status(400).json({ error: 'Player already exists' });
@@ -75,19 +75,19 @@ router.post('/players', authenticateToken, (req, res) => {
 // Update player
 router.put('/players/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
-  const { username, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, notes, updated_by } = req.body;
+  const { username, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, cart, notes, updated_by } = req.body;
   
   const skin_url = `https://mc-heads.net/body/${username}/256`;
   
   const query = `
     UPDATE players 
     SET username = ?, skin_url = ?, overall_tier = ?, region = ?, sword = ?, axe = ?, spear = ?, mace = ?, 
-        spear_elytra = ?, uhc = ?, diamond_smp = ?, nether_pot = ?, crystals = ?, netherite_smp = ?, notes = ?, 
+        spear_elytra = ?, uhc = ?, diamond_smp = ?, nether_pot = ?, crystals = ?, netherite_smp = ?, cart = ?, notes = ?, 
         updated_by = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
   `;
   
-  db.run(query, [username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, notes, updated_by, id], function(err) {
+  db.run(query, [username, skin_url, overall_tier, region, sword, axe, spear, mace, spear_elytra, uhc, diamond_smp, nether_pot, crystals, netherite_smp, cart, notes, updated_by, id], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
