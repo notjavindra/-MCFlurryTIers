@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import TierBadge from '../components/TierBadge';
 import { GAMEMODES, TIER_ORDER } from '../utils/tiers';
 import { Search as SearchIcon } from 'lucide-react';
+import API_URL from '../api';
 
 const Leaderboard = () => {
   const [selectedGamemode, setSelectedGamemode] = useState('overall');
@@ -23,7 +24,7 @@ const Leaderboard = () => {
     try {
       if (selectedGamemode === 'overall') {
         // For overall, fetch all players and sort by overall_tier
-        const response = await fetch('/api/players');
+        const response = await fetch(`${API_URL}/api/players`);
         const data = await response.json();
         
         // Filter out unranked players
@@ -46,7 +47,7 @@ const Leaderboard = () => {
         
         setPlayers(playersWithTier);
       } else {
-        const response = await fetch(`/api/players/leaderboard/${selectedGamemode}`);
+        const response = await fetch(`${API_URL}/api/players/leaderboard/${selectedGamemode}`);
         const data = await response.json();
         setPlayers(data.players);
       }

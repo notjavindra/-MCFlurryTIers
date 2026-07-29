@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import TierBadge from '../components/TierBadge';
 import { GAMEMODES, calculateOverallPoints, getOverallTierFromPoints } from '../utils/tiers';
 import { ArrowLeft } from 'lucide-react';
+import API_URL from '../api';
 
 const PlayerProfile = () => {
   const { username } = useParams();
@@ -18,7 +19,7 @@ const PlayerProfile = () => {
   const fetchPlayer = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/players/${username}`);
+      const response = await fetch(`${API_URL}/api/players/${username}`);
       const data = await response.json();
       setPlayer(data.player);
     } catch (error) {
@@ -30,7 +31,7 @@ const PlayerProfile = () => {
 
   const fetchOverallRank = async () => {
     try {
-      const response = await fetch('/api/players');
+      const response = await fetch(`${API_URL}/api/players`);
       const data = await response.json();
       
       const { TIER_ORDER } = await import('../utils/tiers');

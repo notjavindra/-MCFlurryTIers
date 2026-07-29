@@ -5,6 +5,7 @@ import { Users, Award, TrendingUp, LogOut, Plus, Edit, Trash2, Search as SearchI
 import TierBadge from '../components/TierBadge';
 import { GAMEMODES, ALL_TIERS } from '../utils/tiers';
 import Toast from '../components/Toast';
+import API_URL from '../api';
 
 const AdminDashboard = () => {
   const { isAuthenticated, logout, token } = useAuth();
@@ -51,10 +52,10 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const [statsRes, playersRes] = await Promise.all([
-        fetch('/api/admin/stats', {
+        fetch(`${API_URL}/api/admin/stats`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('/api/admin/players', {
+        fetch(`${API_URL}/api/admin/players`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -74,7 +75,7 @@ const AdminDashboard = () => {
   const handleAddPlayer = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/admin/players', {
+      const response = await fetch(`${API_URL}/api/admin/players`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ const AdminDashboard = () => {
   const handleEditPlayer = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/api/admin/players/${editingPlayer.id}`, {
+      const response = await fetch(`${API_URL}/api/admin/players/${editingPlayer.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ const AdminDashboard = () => {
 
   const handleDeletePlayer = async () => {
     try {
-      const response = await fetch(`/api/admin/players/${deletingPlayer.id}`, {
+      const response = await fetch(`${API_URL}/api/admin/players/${deletingPlayer.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
