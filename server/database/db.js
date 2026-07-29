@@ -41,44 +41,32 @@ async function initDb() {
   if (isProduction) {
     try {
       // Drop table if exists to ensure clean schema
-      await db.query(`DROP TABLE IF EXISTS players CASCADE`);
+      await db.query('DROP TABLE IF EXISTS players CASCADE');
 
       // Create players table for PostgreSQL
-      await db.query(`
-        CREATE TABLE players (
-          id SERIAL PRIMARY KEY,
-          username VARCHAR(255) UNIQUE NOT NULL,
-          skin_url TEXT,
-          overall_tier VARCHAR(50),
-          region VARCHAR(50),
-          sword VARCHAR(50),
-          axe VARCHAR(50),
-          spear VARCHAR(50),
-          mace VARCHAR(50),
-          spear_elytra VARCHAR(50),
-          uhc VARCHAR(50),
-          diamond_smp VARCHAR(50),
-          nether_pot VARCHAR(50),
-          crystals VARCHAR(50),
-          netherite_smp VARCHAR(50),
-          cart VARCHAR(50),
-          notes TEXT,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_by VARCHAR(255)
-        )
-      `);
-
-      // Create indexes
-      try {
-        await db.query(`CREATE INDEX idx_username ON players(username)`);
-      } catch (e) {}
-      try {
-        await db.query(`CREATE INDEX idx_overall_tier ON players(overall_tier)`);
-      } catch (e) {}
-      try {
-        await db.query(`CREATE INDEX idx_region ON players(region)`);
-      } catch (e) {}
+      const createTableQuery = `CREATE TABLE players (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        skin_url TEXT,
+        overall_tier VARCHAR(50),
+        region VARCHAR(50),
+        sword VARCHAR(50),
+        axe VARCHAR(50),
+        spear VARCHAR(50),
+        mace VARCHAR(50),
+        spear_elytra VARCHAR(50),
+        uhc VARCHAR(50),
+        diamond_smp VARCHAR(50),
+        nether_pot VARCHAR(50),
+        crystals VARCHAR(50),
+        netherite_smp VARCHAR(50),
+        cart VARCHAR(50),
+        notes TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_by VARCHAR(255)
+      )`;
+      await db.query(createTableQuery);
 
       console.log('PostgreSQL database initialized');
     } catch (err) {
