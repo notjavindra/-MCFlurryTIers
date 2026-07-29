@@ -66,23 +66,21 @@ async function initDb() {
         )
       `);
 
-      // Add columns if they don't exist
-      try {
-        await db.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS region VARCHAR(50)`);
-      } catch (e) {
-        // Column might already exist
-      }
+      // Check and add columns if they don't exist
+      const columns = await db.query(`
+        SELECT column_name FROM information_schema.columns
+        WHERE table_name = 'players'
+      `);
+      const columnNames = columns.rows.map(row => row.column_name);
 
-      try {
-        await db.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS netherite_smp VARCHAR(50)`);
-      } catch (e) {
-        // Column might already exist
+      if (!columnNames.includes('region')) {
+        await db.query(`ALTER TABLE players ADD COLUMN region VARCHAR(50)`);
       }
-
-      try {
-        await db.query(`ALTER TABLE players ADD COLUMN IF NOT EXISTS cart VARCHAR(50)`);
-      } catch (e) {
-        // Column might already exist
+      if (!columnNames.includes('netherite_smp')) {
+        await db.query(`ALTER TABLE players ADD COLUMN netherite_smp VARCHAR(50)`);
+      }
+      if (!columnNames.includes('cart')) {
+        await db.query(`ALTER TABLE players ADD COLUMN cart VARCHAR(50)`);
       }
 
       // Create indexes
