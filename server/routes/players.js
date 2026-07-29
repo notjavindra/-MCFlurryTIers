@@ -2,6 +2,19 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
 
+// Helper function to handle both callback (SQLite) and promise (PostgreSQL) database calls
+const queryDb = (method, query, params, callback) => {
+  if (typeof db[method] === 'function' && db[method].constructor.name === 'AsyncFunction') {
+    // PostgreSQL - promise based
+    db[method](query, params)
+      .then(result => callback(null, result))
+      .catch(err => callback(err, null));
+  } else {
+    // SQLite - callback based
+    db[method](query, params, callback);
+  }
+};
+
 // Get all players with optional search
 router.get('/', (req, res) => {
   const { search } = req.query;
@@ -15,7 +28,7 @@ router.get('/', (req, res) => {
 
   query += ' ORDER BY updated_at DESC';
 
-  db.all(query, params, (err, rows) => {
+  queryDb('all', query, params, (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -27,7 +40,7 @@ router.get('/', (req, res) => {
 // Get single player by username
 router.get('/:username', (req, res) => {
   const { username } = req.params;
-  db.get('SELECT * FROM players WHERE username = ?', [username], (err, row) => {
+  queryDb('get', 'SELECT * FROM players WHERE username = ?', [username], (err, row) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -44,7 +57,7 @@ router.get('/:username', (req, res) => {
 router.get('/leaderboard/:gamemode', (req, res) => {
   const { gamemode } = req.params;
   const validGamemodes = ['overall', 'sword', 'axe', 'spear', 'mace', 'spear_elytra', 'uhc', 'diamond_smp', 'nether_pot', 'crystals', 'netherite_smp', 'cart'];
-  
+
   if (!validGamemodes.includes(gamemode)) {
     res.status(400).json({ error: 'Invalid gamemode' });
     return;
@@ -52,15 +65,15 @@ router.get('/leaderboard/:gamemode', (req, res) => {
 
   const column = gamemode === 'overall' ? 'overall_tier' : gamemode;
   const tierOrder = "CASE tier WHEN 'HT1' THEN 1 WHEN 'LT1' THEN 2 WHEN 'HT2' THEN 3 WHEN 'LT2' THEN 4 WHEN 'HT3' THEN 5 WHEN 'LT3' THEN 6 WHEN 'HT4' THEN 7 WHEN 'LT4' THEN 8 WHEN 'HT5' THEN 9 WHEN 'LT5' THEN 10 WHEN 'Low Tier' THEN 11 WHEN 'Mid Tier' THEN 12 WHEN 'High Tier' THEN 13 ELSE 14 END";
-  
+
   const query = `
-    SELECT id, username, skin_url, ${column} as tier, updated_at 
-    FROM players 
+    SELECT id, username, skin_url, ${column} as tier, updated_at
+    FROM players
     WHERE ${column} IS NOT NULL AND ${column} != 'Unranked'
     ORDER BY ${tierOrder}, updated_at DESC
   `;
 
-  db.all(query, [], (err, rows) => {
+  queryDb('all', query, [], (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
