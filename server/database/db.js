@@ -15,10 +15,27 @@ if (isProduction) {
   });
 
   db = {
-    query: (text, params) => pool.query(text, params),
-    get: (text, params) => pool.query(text, params).then(res => res.rows[0]),
-    all: (text, params) => pool.query(text, params).then(res => res.rows),
-    run: (text, params) => pool.query(text, params).then(res => ({ lastID: res.rows[0]?.id, changes: res.rowCount })),
+    query: (text, params) => {
+      // Convert ? placeholders to $1, $2 for PostgreSQL
+      let paramIndex = 1;
+      const pgQuery = text.replace(/\?/g, () => `$${paramIndex++}`);
+      return pool.query(pgQuery, params);
+    },
+    get: (text, params) => {
+      let paramIndex = 1;
+      const pgQuery = text.replace(/\?/g, () => `$${paramIndex++}`);
+      return pool.query(pgQuery, params).then(res => res.rows[0]);
+    },
+    all: (text, params) => {
+      let paramIndex = 1;
+      const pgQuery = text.replace(/\?/g, () => `$${paramIndex++}`);
+      return pool.query(pgQuery, params).then(res => res.rows);
+    },
+    run: (text, params) => {
+      let paramIndex = 1;
+      const pgQuery = text.replace(/\?/g, () => `$${paramIndex++}`);
+      return pool.query(pgQuery, params).then(res => ({ lastID: res.rows[0]?.id, changes: res.rowCount }));
+    },
     close: () => pool.end()
   };
 
