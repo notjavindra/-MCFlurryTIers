@@ -40,9 +40,12 @@ if (isProduction) {
 async function initDb() {
   if (isProduction) {
     try {
+      // Drop table if exists to ensure clean schema
+      await db.query(`DROP TABLE IF EXISTS players CASCADE`);
+
       // Create players table for PostgreSQL
       await db.query(`
-        CREATE TABLE IF NOT EXISTS players (
+        CREATE TABLE players (
           id SERIAL PRIMARY KEY,
           username VARCHAR(255) UNIQUE NOT NULL,
           skin_url TEXT,
@@ -66,32 +69,15 @@ async function initDb() {
         )
       `);
 
-      // Check and add columns if they don't exist
-      const columns = await db.query(`
-        SELECT column_name FROM information_schema.columns
-        WHERE table_name = 'players'
-      `);
-      const columnNames = columns.rows.map(row => row.column_name);
-
-      if (!columnNames.includes('region')) {
-        await db.query(`ALTER TABLE players ADD COLUMN region VARCHAR(50)`);
-      }
-      if (!columnNames.includes('netherite_smp')) {
-        await db.query(`ALTER TABLE players ADD COLUMN netherite_smp VARCHAR(50)`);
-      }
-      if (!columnNames.includes('cart')) {
-        await db.query(`ALTER TABLE players ADD COLUMN cart VARCHAR(50)`);
-      }
-
       // Create indexes
       try {
-        await db.query(`CREATE INDEX IF NOT EXISTS idx_username ON players(username)`);
+        await db.query(`CREATE INDEX idx_username ON players(username)`);
       } catch (e) {}
       try {
-        await db.query(`CREATE INDEX IF NOT EXISTS idx_overall_tier ON players(overall_tier)`);
+        await db.query(`CREATE INDEX idx_overall_tier ON players(overall_tier)`);
       } catch (e) {}
       try {
-        await db.query(`CREATE INDEX IF NOT EXISTS idx_region ON players(region)`);
+        await db.query(`CREATE INDEX idx_region ON players(region)`);
       } catch (e) {}
 
       console.log('PostgreSQL database initialized');
