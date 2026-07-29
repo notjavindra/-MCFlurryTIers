@@ -51,7 +51,7 @@ router.get('/leaderboard/:gamemode', (req, res) => {
   }
 
   const column = gamemode === 'overall' ? 'overall_tier' : gamemode;
-  const tierOrder = "CASE tier WHEN 'LT5' THEN 1 WHEN 'HT5' THEN 2 WHEN 'LT4' THEN 3 WHEN 'HT4' THEN 4 WHEN 'LT3' THEN 5 WHEN 'HT3' THEN 6 WHEN 'LT2' THEN 7 WHEN 'HT2' THEN 8 WHEN 'LT1' THEN 9 WHEN 'HT1' THEN 10 WHEN 'Low Tier' THEN 11 WHEN 'Mid Tier' THEN 12 WHEN 'High Tier' THEN 13 ELSE 14 END";
+  const tierOrder = "CASE tier WHEN 'HT1' THEN 1 WHEN 'LT1' THEN 2 WHEN 'HT2' THEN 3 WHEN 'LT2' THEN 4 WHEN 'HT3' THEN 5 WHEN 'LT3' THEN 6 WHEN 'HT4' THEN 7 WHEN 'LT4' THEN 8 WHEN 'HT5' THEN 9 WHEN 'LT5' THEN 10 WHEN 'Low Tier' THEN 11 WHEN 'Mid Tier' THEN 12 WHEN 'High Tier' THEN 13 ELSE 14 END";
   
   const query = `
     SELECT id, username, skin_url, ${column} as tier, updated_at 

@@ -16,23 +16,23 @@ export const TIER_COLORS = {
 };
 
 export const TIER_POINTS = {
-  'LT5': 10,
-  'HT5': 20,
-  'LT4': 30,
-  'HT4': 40,
-  'LT3': 50,
-  'HT3': 60,
-  'LT2': 70,
-  'HT2': 80,
-  'LT1': 90,
   'HT1': 100,
+  'LT1': 90,
+  'HT2': 80,
+  'LT2': 70,
+  'HT3': 60,
+  'LT3': 50,
+  'HT4': 40,
+  'LT4': 30,
+  'HT5': 20,
+  'LT5': 10,
   'Low Tier': 45,
   'Mid Tier': 35,
   'High Tier': 25,
   'Unranked': 0,
 };
 
-export const TIER_ORDER = ['LT5', 'HT5', 'LT4', 'HT4', 'LT3', 'HT3', 'LT2', 'HT2', 'LT1', 'HT1', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
+export const TIER_ORDER = ['HT1', 'LT1', 'HT2', 'LT2', 'HT3', 'LT3', 'HT4', 'LT4', 'HT5', 'LT5', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
 
 export const GAMEMODES = [
   { key: 'sword', name: 'Sword', emoji: '⚔️' },
@@ -48,7 +48,7 @@ export const GAMEMODES = [
   { key: 'cart', name: 'Cart', emoji: '🛒' },
 ];
 
-export const ALL_TIERS = ['LT5', 'HT5', 'LT4', 'HT4', 'LT3', 'HT3', 'LT2', 'HT2', 'LT1', 'HT1', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
+export const ALL_TIERS = ['HT1', 'LT1', 'HT2', 'LT2', 'HT3', 'LT3', 'HT4', 'LT4', 'HT5', 'LT5', 'Low Tier', 'Mid Tier', 'High Tier', 'Unranked'];
 
 export const calculateOverallPoints = (player) => {
   let totalPoints = 0;
@@ -69,8 +69,8 @@ export const getOverallTierFromPoints = (averagePoints) => {
   if (averagePoints >= 75) return 'HT2';
   if (averagePoints >= 65) return 'LT2';
   if (averagePoints >= 55) return 'HT3';
-  if (averagePoints >= 45) return 'LT3';
-  if (averagePoints >= 35) return 'HT4';
+  if (averagePoints >= 45) return 'HT4';
+  if (averagePoints >= 35) return 'LT3';
   if (averagePoints >= 25) return 'LT4';
   if (averagePoints >= 15) return 'HT5';
   if (averagePoints >= 5) return 'LT5';

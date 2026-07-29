@@ -33,24 +33,19 @@ const PlayerProfile = () => {
       const response = await fetch('/api/players');
       const data = await response.json();
       
-      // Calculate average points and determine overall tier for each player
-      const playersWithAverage = data.players.map(p => {
-        const averagePoints = calculateOverallPoints(p);
-        const calculatedTier = getOverallTierFromPoints(averagePoints);
-        return {
-          ...p,
-          averagePoints,
-          calculatedTier
-        };
-      });
+      const { TIER_ORDER } = await import('../utils/tiers');
       
       // Filter out unranked players
-      const rankedPlayers = playersWithAverage.filter(p => 
-        p.calculatedTier !== 'Unranked'
+      const rankedPlayers = data.players.filter(p => 
+        p.overall_tier && p.overall_tier !== 'Unranked'
       );
       
-      // Sort by average points descending
-      rankedPlayers.sort((a, b) => b.averagePoints - a.averagePoints);
+      // Sort by overall_tier using TIER_ORDER
+      rankedPlayers.sort((a, b) => {
+        const aIndex = TIER_ORDER.indexOf(a.overall_tier);
+        const bIndex = TIER_ORDER.indexOf(b.overall_tier);
+        return aIndex - bIndex;
+      });
       
       const rank = rankedPlayers.findIndex(p => p.username === username);
       if (rank !== -1) {

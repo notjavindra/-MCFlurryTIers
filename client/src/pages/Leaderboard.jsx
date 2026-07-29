@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TierBadge from '../components/TierBadge';
-import { GAMEMODES, calculateOverallPoints, getOverallTierFromPoints } from '../utils/tiers';
+import { GAMEMODES, TIER_ORDER } from '../utils/tiers';
 import { Search as SearchIcon } from 'lucide-react';
 
 const Leaderboard = () => {
@@ -22,30 +22,29 @@ const Leaderboard = () => {
     setLoading(true);
     try {
       if (selectedGamemode === 'overall') {
-        // For overall, fetch all players and calculate average points
+        // For overall, fetch all players and sort by overall_tier
         const response = await fetch('/api/players');
         const data = await response.json();
         
-        // Calculate average points and determine overall tier for each player
-        const playersWithAverage = data.players.map(player => {
-          const averagePoints = calculateOverallPoints(player);
-          const calculatedTier = getOverallTierFromPoints(averagePoints);
-          return {
-            ...player,
-            tier: calculatedTier,
-            averagePoints
-          };
-        });
-        
         // Filter out unranked players
-        const rankedPlayers = playersWithAverage.filter(player => 
-          player.tier !== 'Unranked'
+        const rankedPlayers = data.players.filter(player => 
+          player.overall_tier && player.overall_tier !== 'Unranked'
         );
         
-        // Sort by average points descending (higher average = better rank)
-        rankedPlayers.sort((a, b) => b.averagePoints - a.averagePoints);
+        // Sort by overall_tier using TIER_ORDER
+        rankedPlayers.sort((a, b) => {
+          const aIndex = TIER_ORDER.indexOf(a.overall_tier);
+          const bIndex = TIER_ORDER.indexOf(b.overall_tier);
+          return aIndex - bIndex;
+        });
         
-        setPlayers(rankedPlayers);
+        // Add tier property for display
+        const playersWithTier = rankedPlayers.map(player => ({
+          ...player,
+          tier: player.overall_tier
+        }));
+        
+        setPlayers(playersWithTier);
       } else {
         const response = await fetch(`/api/players/leaderboard/${selectedGamemode}`);
         const data = await response.json();
